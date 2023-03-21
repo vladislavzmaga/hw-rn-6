@@ -1,42 +1,44 @@
-import { useState, createContext, useEffect } from "react";
-import AppLoading from "expo-app-loading";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from "@react-navigation/stack";
+import { Provider } from 'react-redux';
+// auth screens
+import { RegistrationScreen } from './src/screens/auth/RegistrationScreen';
+import { LoginScreen } from './src/screens/auth/LoginScreen';
+// main screens
+import { Home } from './src/screens/main/Home';
+import { store } from './src/redux/store';
 
-import loadApplication from "./fonts/fonts.js";
-import Route from "./route/route.js";
-export const IsLoginContext = createContext();
+const AuthStack = createStackNavigator();
+
+// import { Text } from 'react-native';
+
 export default function App() {
-  const [isReady, setIsReady] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-  if (!isReady) {
-    return (
-      <AppLoading
-        startAsync={loadApplication}
-        onFinish={() => setIsReady(true)}
-        onError={console.warn}
-      />
-    );
-  }
-  // useEffect(() => {
-  //   const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
-  //     setIsKeyboardOpen(true);
-  //   });
-  //   const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-  //     setIsKeyboardOpen(false);
-  //   });
-
-  //   return () => {
-  //     showSubscription.remove();
-  //     hideSubscription.remove();
-  //   };
-  // }, []);
 
   return (
-    <IsLoginContext.Provider value={setIsLogin}>
+    // <Text>ASd</Text>
+    <Provider store={store}>
       <NavigationContainer>
-        <Route isAuth={isLogin} />
+        <AuthStack.Navigator>
+          <AuthStack.Screen 
+            options={{
+                headerShown: false,
+            }} 
+            name='Login' 
+            component={LoginScreen}/>
+          <AuthStack.Screen 
+            options={{
+                headerShown: false,
+            }} 
+            name='Register' 
+            component={RegistrationScreen}/>
+          <AuthStack.Screen 
+            options={{
+                headerShown: false,
+            }} 
+            name='Home' 
+            component={Home}/>
+          </AuthStack.Navigator>
       </NavigationContainer>
-    </IsLoginContext.Provider>
+    </Provider>
   );
 }
